@@ -80,8 +80,8 @@ github.com/go-sphere/confstore v0.0.4 h1:LJoui4Q1qryvW/rqKHAdEc0j2eLWH2Eb76LvY0v
 github.com/go-sphere/confstore v0.0.4/go.mod h1:rvp2oSOW4x3E8JU0efD9JtHpBM2M3VIqM4rohoSMr34=
 github.com/go-sphere/errors v0.0.1 h1:kdTFOB1L8yyNHaYgpYZPSHu/xeMsEkujmCpkzK+v3hQ=
 github.com/go-sphere/errors v0.0.1/go.mod h1:xShlZuLMCNDjkn8IHMcKVeImtjw1ax8dZuhpcrwqhho=
-github.com/go-sphere/sphere v0.0.2-beta.1 h1:oOiQMOcPMI3ZtWXUbCOkmenV0bKQjRd5RsRJi8sf+G4=
-github.com/go-sphere/sphere v0.0.2-beta.1/go.mod h1:zDB0W6oLsILZC2Uw+lub87tSq8WCeCEmS/Gnd9uweRE=
+github.com/go-sphere/sphere v0.0.2-beta.2 h1:tT7kagEK+xV6h/cj8mX4/6Hzl7XDs+RQWtjtTBTTrg8=
+github.com/go-sphere/sphere v0.0.2-beta.2/go.mod h1:zDB0W6oLsILZC2Uw+lub87tSq8WCeCEmS/Gnd9uweRE=
 github.com/go-viper/mapstructure/v2 v2.4.0 h1:EBsztssimR/CONLSZZ04E8qAkxNYq4Qp9LvH92wZUgs=
 github.com/go-viper/mapstructure/v2 v2.4.0/go.mod h1:oJDH3BJKyqBA2TXFhDsKDGDTlndYOZ6rGS0BRZIxGhM=
 github.com/goccy/go-json v0.10.5 h1:Fq85nIqj+gXn/S5ahsiTlK3TmC85qgirsdTP/+DeaC4=
