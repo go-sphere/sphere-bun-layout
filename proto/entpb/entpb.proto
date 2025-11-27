@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package entpb;
+
+import "sphere/binding/binding.proto";
+
+message Admin {
+  option (sphere.binding.default_auto_tags) = "bun";
+  int64 id = 1 [(sphere.binding.tags) = "bun:\",pk,autoincrement\""];
+  string name = 2 [(sphere.binding.tags) = "bun:\",notnull\""];
+  string email = 3;
+  string role = 4;
+  string password = 5 [(sphere.binding.tags) = "json:\"-\""];
+}

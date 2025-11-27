@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "buf/validate/validate.proto";
+import "entpb/entpb.proto";
+import "google/api/annotations.proto";
+import "sphere/binding/binding.proto";
+import "sphere/errors/errors.proto";
+
+service AdminService {
+  rpc ListAdmins(ListAdminsRequest) returns (ListAdminsResponse) {
+    option (google.api.http) = {get: "/api/admin/list"};
+  }
+  rpc CreateAdmin(CreateAdminRequest) returns (CreateAdminResponse) {
+    option (google.api.http) = {
+      post: "/api/admin/create"
+      body: "*"
+    };
+  }
+  rpc UpdateAdmin(UpdateAdminRequest) returns (UpdateAdminResponse) {
+    option (google.api.http) = {
+      post: "/api/admin/update"
+      body: "*"
+    };
+  }
+  rpc GetAdmin(GetAdminRequest) returns (GetAdminResponse) {
+    option (google.api.http) = {get: "/api/admin/detail/{id}"};
+  }
+  rpc DeleteAdmin(DeleteAdminRequest) returns (DeleteAdminResponse) {
+    option (google.api.http) = {delete: "/api/admin/delete/{id}"};
+  }
+}
+
+message ListAdminsRequest {
+  option (sphere.binding.default_location) = BINDING_LOCATION_QUERY;
+
+  int64 page = 1 [
+    (buf.validate.field).required = false,
+    (buf.validate.field).int64.gte = 0
+  ];
+  int64 page_size = 2 [(buf.validate.field).int64.gte = 0];
+}
+
+message ListAdminsResponse {
+  repeated entpb.Admin admins = 1;
+  int64 total_size = 2;
+  int64 total_page = 3;
+}
+
+message CreateAdminRequest {
+  entpb.Admin admin = 1;
+}
+
+message CreateAdminResponse {
+  entpb.Admin admin = 1;
+}
+
+message UpdateAdminRequest {
+  entpb.Admin admin = 1;
+}
+
+message UpdateAdminResponse {
+  entpb.Admin admin = 1;
+}
+
+message GetAdminRequest {
+  int64 id = 1 [(sphere.binding.location) = BINDING_LOCATION_URI];
+}
+
+message GetAdminResponse {
+  entpb.Admin admin = 1;
+}
+
+message DeleteAdminRequest {
+  int64 id = 1 [(sphere.binding.location) = BINDING_LOCATION_URI];
+}
+
+message DeleteAdminResponse {}
+
+enum AdminError {
+  option (sphere.errors.default_status) = 500;
+  ADMIN_ERROR_UNSPECIFIED = 0;
+  ADMIN_ERROR_NOT_FOUND = 1 [(sphere.errors.options).status = 404];
+}
