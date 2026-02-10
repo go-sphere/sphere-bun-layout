@@ -9,7 +9,7 @@ import (
 	"github.com/go-sphere/sphere-bun-layout/internal/pkg/database"
 	"github.com/go-sphere/sphere-bun-layout/internal/server/api"
 	"github.com/go-sphere/sphere-bun-layout/internal/server/docs"
-	"github.com/go-sphere/sphere/log"
+	"github.com/go-sphere/sphere/log/zapx"
 	"github.com/go-sphere/sphere/utils/secure"
 )
 
@@ -17,7 +17,7 @@ var BuildVersion = "dev"
 
 type Config struct {
 	Environments map[string]string `json:"environments" yaml:"environments"`
-	Log          *log.Config       `json:"log" yaml:"log"`
+	Log          *zapx.Config      `json:"log" yaml:"log"`
 	API          *api.Config       `json:"api" yaml:"api"`
 	Docs         *docs.Config      `json:"docs" yaml:"docs"`
 	Database     *database.Config  `json:"database" yaml:"database"`
@@ -26,14 +26,14 @@ type Config struct {
 func NewEmptyConfig() *Config {
 	return &Config{
 		Environments: map[string]string{},
-		Log: &log.Config{
-			File: &log.FileConfig{
+		Log: &zapx.Config{
+			File: &zapx.FileConfig{
 				FileName:   "./var/log/sphere.log",
 				MaxSize:    10,
 				MaxBackups: 10,
 				MaxAge:     10,
 			},
-			Console: &log.ConsoleConfig{},
+			Console: &zapx.ConsoleConfig{},
 			Level:   "info",
 		},
 		API: &api.Config{
@@ -68,7 +68,7 @@ func NewConfig(path string) (*Config, error) {
 		return nil, err
 	}
 	if config.Log == nil {
-		config.Log = log.NewDefaultConfig()
+		config.Log = zapx.NewDefaultConfig()
 	}
 	return config, nil
 }

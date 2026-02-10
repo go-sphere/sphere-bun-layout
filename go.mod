@@ -13,7 +13,7 @@ require (
 	github.com/go-sphere/httpx v0.0.2-beta.30
 	github.com/go-sphere/httpx/fiberx v0.0.2-beta.30
 	github.com/go-sphere/httpx/ginx v0.0.2-beta.30
-	github.com/go-sphere/sphere v0.0.3-beta.9
+	github.com/go-sphere/sphere v0.0.3-beta.9.0.20260210060703-9a3671c51485
 	github.com/go-viper/mapstructure/v2 v2.5.0
 	github.com/gofiber/contrib/v3/zap v1.0.0-rc.1
 	github.com/gofiber/fiber/v3 v3.0.0-rc.3
