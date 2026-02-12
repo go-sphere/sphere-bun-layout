@@ -10,15 +10,15 @@ import (
 )
 
 type Web struct {
-	config  *Config
+	config  Config
 	server  httpx.Engine
 	service *api.Service
 }
 
-func NewWebServer(conf *Config, service *api.Service) *Web {
+func NewWebServer(conf Config, service *api.Service) *Web {
 	return &Web{
 		config:  conf,
-		server:  httpsrv.NewFiberServer("api", conf.HTTP.Address),
+		server:  httpsrv.NewGinServer("api", conf.HTTP.Address),
 		service: service,
 	}
 }

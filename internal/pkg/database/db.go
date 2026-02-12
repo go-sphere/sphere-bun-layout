@@ -12,7 +12,7 @@ type Config struct {
 	Location string
 }
 
-func NewDbConnection(conf *Config) (*sql.DB, error) {
+func NewDbConnection(conf Config) (*sql.DB, error) {
 	return sql.Open(sqliteshim.ShimName, conf.Location)
 }
 

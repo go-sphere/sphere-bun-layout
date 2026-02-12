@@ -30,5 +30,5 @@ func (d DbInit) Start(ctx context.Context) error {
 }
 
 func (d DbInit) Stop(ctx context.Context) error {
-	return nil
+	return d.db.Close()
 }
