@@ -21,6 +21,7 @@ Sphere build tool. Usage: make [target]
   build/docker         Build docker image
   build/multi-docker   Build multi-arch docker image
   run                  Run the application
+  run/race             Run the application with the race detector
   run/swag             Run the swagger server
   deploy               Deploy binary
   lint                 Run linter

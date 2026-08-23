@@ -23,6 +23,7 @@ LD_FLAGS        ?= -X $(MODULE)/internal/config.BuildVersion=$(BUILD_VER)
 GO              ?= go
 GO_TAGS         ?= jsoniter#,embed_dash
 GO_RUN          ?= CGO_ENABLED=0 $(GO) run -ldflags "$(LD_FLAGS)" -tags=$(GO_TAGS)
+GO_RUN_RACE     ?= CGO_ENABLED=1 $(GO) run -race -ldflags "$(LD_FLAGS)" -tags=$(GO_TAGS)
 GO_BUILD        ?= CGO_ENABLED=0 $(GO) build -trimpath -ldflags "$(LD_FLAGS)" -tags=$(GO_TAGS)
 GO_INSTALL      ?= $(GO) install
 
@@ -36,9 +37,9 @@ INTERNAL_TOOLS  ?= $(GO) run -tags spheretools
 
 .PHONY: \
 	build build/all clean\
-	gen/wire gen/proto gen/all \
+	gen/wire gen/conf gen/proto gen/docs gen/all \
 	build/docker build/multi-docker \
-	run deploy lint fmt \
+	run run/race run/swag deploy lint fmt \
 	install init help
 
 # ---------- Build Tools ----------
@@ -63,8 +64,9 @@ clean: ## Clean gen code and build files
 gen/wire: ## Generate wire code
 	cd cmd/app/ && $(WIRE_CLI) gen
 
-gen/conf: ## Generate example config
-	$(INTERNAL_TOOLS) ./cmd/tools/config gen
+gen/conf: ## Generate example config; write config.json only if missing
+	$(INTERNAL_TOOLS) ./cmd/tools/config gen --output config_gen.json
+	@if [ ! -f config.json ]; then cp config_gen.json config.json; fi
 
 gen/proto: ## Generate proto files and run protoc plugins
 	$(BUF_CLI) dep update
@@ -104,7 +106,10 @@ build/multi-docker: ## Build multi-arch docker image
 
 # ---------- Tools ----------
 run: ## Run the application
-	$(GO_RUN) -race $(MODULE)/cmd/app
+	$(GO_RUN) $(MODULE)/cmd/app
+
+run/race: ## Run the application with the race detector
+	$(GO_RUN_RACE) $(MODULE)/cmd/app
 
 run/swag: ## Run the swagger server
 	$(INTERNAL_TOOLS) $(MODULE)/cmd/tools/docs
@@ -141,6 +146,7 @@ init: ## Init all dependencies
 	$(MAKE) gen/all
 	$(BUF_CLI) dep update
 	$(GO) mod tidy
+	$(MAKE) gen/conf
 
 help: ## Show this help message
 	@echo "\n\033[1mSphere build tool.\033[0m Usage: make [target]\n"
