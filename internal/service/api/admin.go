@@ -2,30 +2,46 @@ package api
 
 import (
 	"context"
+	"fmt"
 
 	apiv1 "github.com/go-sphere/sphere-bun-layout/api/api/v1"
 	"github.com/go-sphere/sphere-bun-layout/api/entpb"
 	"github.com/go-sphere/sphere-bun-layout/internal/pkg/conv"
 	"github.com/go-sphere/sphere/utils/secure"
+	"google.golang.org/protobuf/proto"
 )
 
 var _ apiv1.AdminServiceHTTPServer = (*Service)(nil)
 
+func stripPassword(admin *entpb.Admin) *entpb.Admin {
+	if admin == nil {
+		return nil
+	}
+	out := proto.Clone(admin).(*entpb.Admin)
+	out.Password = ""
+	return out
+}
+
 func (s *Service) CreateAdmin(ctx context.Context, request *apiv1.CreateAdminRequest) (*apiv1.CreateAdminResponse, error) {
-	request.Admin.Id = 0
-	hashed, err := secure.CryptPassword(request.Admin.Password)
+	admin := request.GetAdmin()
+	if admin == nil {
+		return nil, fmt.Errorf("admin is required")
+	}
+	hashed, err := secure.CryptPassword(admin.Password)
 	if err != nil {
 		return nil, err
 	}
-	request.Admin.Password = hashed
+	toInsert := proto.Clone(admin).(*entpb.Admin)
+	toInsert.Id = 0
+	toInsert.Password = hashed
 	if _, err := s.db.NewInsert().
-		Model(request.Admin).
+		Model(toInsert).
 		Returning("id").
 		Exec(ctx); err != nil {
 		return nil, err
 	}
 	return &apiv1.CreateAdminResponse{
-		Admin: request.Admin,
+		Admin: stripPassword(toInsert),
 	}, nil
 }
 
@@ -56,7 +72,7 @@ func (s *Service) GetAdmin(ctx context.Context, request *apiv1.GetAdminRequest) 
 		return nil, err
 	}
 	return &apiv1.GetAdminResponse{
-		Admin: &admin,
+		Admin: stripPassword(&admin),
 	}, nil
 }
 
@@ -77,8 +93,12 @@ func (s *Service) ListAdmins(ctx context.Context, request *apiv1.ListAdminsReque
 	if err != nil {
 		return nil, err
 	}
+	out := conv.PointerArray(admins)
+	for i := range out {
+		out[i] = stripPassword(out[i])
+	}
 	return &apiv1.ListAdminsResponse{
-		Admins:    conv.PointerArray(admins),
+		Admins:    out,
 		TotalSize: int64(count),
 		TotalPage: int64(page),
 	}, nil
@@ -101,6 +121,6 @@ func (s *Service) UpdateAdmin(ctx context.Context, request *apiv1.UpdateAdminReq
 		return nil, apiv1.AdminError_ADMIN_ERROR_NOT_FOUND
 	}
 	return &apiv1.UpdateAdminResponse{
-		Admin: request.Admin,
+		Admin: stripPassword(request.Admin),
 	}, nil
 }

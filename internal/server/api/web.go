@@ -7,6 +7,8 @@ import (
 	apiv1 "github.com/go-sphere/sphere-bun-layout/api/api/v1"
 	"github.com/go-sphere/sphere-bun-layout/internal/pkg/httpsrv"
 	"github.com/go-sphere/sphere-bun-layout/internal/service/api"
+	"github.com/go-sphere/sphere/server/auth/jwtauth"
+	"github.com/go-sphere/sphere/server/middleware/auth"
 )
 
 type Web struct {
@@ -28,7 +30,14 @@ func (w *Web) Identifier() string {
 }
 
 func (w *Web) Start(ctx context.Context) error {
-	route := w.server.Group("/")
+	jwtAuthorizer := jwtauth.NewJwtAuth[jwtauth.RBACClaims[int64]](w.config.JWT)
+	authMiddleware := auth.NewAuthMiddleware[int64, jwtauth.RBACClaims[int64]](
+		jwtAuthorizer,
+		auth.WithHeaderLoader(auth.AuthorizationHeader),
+		auth.WithPrefixTransform(auth.AuthorizationPrefixBearer),
+		auth.WithAbortOnError(true),
+	)
+	route := w.server.Group("/", authMiddleware)
 	apiv1.RegisterAdminServiceHTTPServer(route, w.service)
 	return w.server.Start()
 }
