@@ -13,7 +13,11 @@ var _ apiv1.AdminServiceHTTPServer = (*Service)(nil)
 
 func (s *Service) CreateAdmin(ctx context.Context, request *apiv1.CreateAdminRequest) (*apiv1.CreateAdminResponse, error) {
 	request.Admin.Id = 0
-	request.Admin.Password = secure.CryptPassword(request.Admin.Password)
+	hashed, err := secure.CryptPassword(request.Admin.Password)
+	if err != nil {
+		return nil, err
+	}
+	request.Admin.Password = hashed
 	if _, err := s.db.NewInsert().
 		Model(request.Admin).
 		Returning("id").

@@ -12,7 +12,7 @@ require (
 	github.com/go-sphere/errors v0.0.1
 	github.com/go-sphere/httpx v0.0.3
 	github.com/go-sphere/httpx/ginx v0.0.3
-	github.com/go-sphere/sphere v0.0.3
+	github.com/go-sphere/sphere v0.0.4
 	github.com/go-viper/mapstructure/v2 v2.5.0
 	github.com/google/wire v0.7.0
 	github.com/spf13/cobra v1.10.2
