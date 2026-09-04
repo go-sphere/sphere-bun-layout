@@ -47,7 +47,9 @@ func TestAdminRoutesRequireJWT(t *testing.T) {
 	for {
 		response, err := client.Get(url)
 		if err == nil {
-			defer response.Body.Close()
+			if err := response.Body.Close(); err != nil {
+				t.Fatalf("close response body: %v", err)
+			}
 			if response.StatusCode != http.StatusUnauthorized {
 				t.Fatalf("unauthenticated admin request status = %d, want %d", response.StatusCode, http.StatusUnauthorized)
 			}
