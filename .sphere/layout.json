@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "name": "bun",
+  "upstream": {
+    "repository": "https://github.com/go-sphere/sphere-bun-layout.git",
+    "ref": "master",
+    "module": "github.com/go-sphere/sphere-bun-layout"
+  },
+  "capabilities": [
+    "protobuf",
+    "gin-http",
+    "bun",
+    "wire",
+    "swagger",
+    "password-auth"
+  ],
+  "ownership": {
+    "layout_owned": [
+      ".github/workflows/**",
+      ".dockerignore",
+      ".gitignore",
+      ".sphere/layout.json",
+      "AGENTS.md",
+      "CONTRIBUTING.md",
+      "LICENSE",
+      "buf.gen.yaml",
+      "buf.binding.yaml",
+      "buf.yaml",
+      "cmd/app/Dockerfile",
+      "cmd/tools/**",
+      "docs/docs.*.go",
+      "internal/pkg/app/**",
+      "internal/pkg/httpsrv/**"
+    ],
+    "mixed": [
+      "Makefile",
+      "go.mod",
+      "cmd/app/builder.go",
+      "cmd/app/main.go",
+      "cmd/app/wire.go",
+      "internal/config/**",
+      "internal/wire.go",
+      "internal/*/wire.go",
+      "internal/server/*/web.go",
+      "internal/pkg/database/**",
+      "internal/service/api/**",
+      "proto/api/**",
+      "proto/entpb/entpb.proto"
+    ],
+    "generated": [
+      "api/**",
+      "build/**",
+      "swagger/**",
+      "var/**",
+      "config.json",
+      "config_gen.json",
+      "buf.lock",
+      "go.sum",
+      "cmd/app/wire_gen.go"
+    ],
+    "default": "project_owned"
+  }
+}

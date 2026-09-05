@@ -30,6 +30,9 @@ func (w *Web) Identifier() string {
 }
 
 func (w *Web) Start(ctx context.Context) error {
+	if err := httpsrv.UseCORS(w.server, w.config.HTTP.Cors); err != nil {
+		return err
+	}
 	jwtAuthorizer := jwtauth.NewJwtAuth[jwtauth.RBACClaims[int64]](w.config.JWT)
 	authMiddleware := auth.NewAuthMiddleware[int64, jwtauth.RBACClaims[int64]](
 		jwtAuthorizer,

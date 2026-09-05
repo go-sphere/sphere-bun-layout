@@ -40,7 +40,7 @@ INTERNAL_TOOLS  ?= $(GO) run -tags spheretools
 	build build/all clean\
 	gen/wire gen/conf gen/proto gen/docs gen/all \
 	build/docker build/multi-docker \
-	run run/race run/swag deploy deps-update tidy test lint fmt check \
+	run run/race run/swag deps-update tidy test lint fmt check \
 	install init help
 
 # ---------- Build Tools ----------
@@ -115,9 +115,6 @@ run/race: ## Run the application with the race detector
 
 run/swag: ## Run the swagger server
 	$(INTERNAL_TOOLS) $(MODULE)/cmd/tools/docs
-
-deploy: ## Deploy binary
-	./devops/deploy/deploy.sh
 
 deps-update: ## Update direct Go dependencies
 	@deps="$$(GOWORK=off $(GO) list -m -f '$(DIRECT_DEPS_TEMPLATE)' all)"; \
