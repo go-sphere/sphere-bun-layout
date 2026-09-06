@@ -5,14 +5,13 @@ go 1.26.8
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.12-20260825204119-511051f7f437.2
 	buf.build/go/protovalidate v1.4.0
-	github.com/gin-contrib/zap v1.1.7
 	github.com/gin-gonic/gin v1.12.0
 	github.com/go-sphere/binding v0.0.4
 	github.com/go-sphere/confstore v0.0.4
 	github.com/go-sphere/errors v0.0.1
-	github.com/go-sphere/httpx v0.0.3
-	github.com/go-sphere/httpx/ginx v0.0.3
-	github.com/go-sphere/sphere v0.0.4
+	github.com/go-sphere/httpx v0.0.4
+	github.com/go-sphere/httpx/ginx v0.0.4
+	github.com/go-sphere/sphere v0.0.6-0.20260906140008-0292cf303e83
 	github.com/go-viper/mapstructure/v2 v2.5.0
 	github.com/google/wire v0.7.0
 	github.com/spf13/cobra v1.10.2
@@ -36,7 +35,7 @@ require (
 	github.com/cloudwego/base64x v0.1.7 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.15 // indirect
-	github.com/gin-contrib/sse v1.1.1 // indirect
+	github.com/gin-contrib/sse v1.1.2 // indirect
 	github.com/go-openapi/jsonpointer v1.0.1 // indirect
 	github.com/go-openapi/jsonreference v1.0.2 // indirect
 	github.com/go-openapi/spec v1.0.1 // indirect
@@ -77,7 +76,7 @@ require (
 	github.com/ugorji/go/codec v1.3.2 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
-	go.mongodb.org/mongo-driver/v2 v2.8.2 // indirect
+	go.mongodb.org/mongo-driver/v2 v2.9.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.28.0 // indirect
 	go.uber.org/zap/exp v0.3.0 // indirect
