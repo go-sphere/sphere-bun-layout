@@ -2,9 +2,10 @@
 
 ## Layout Profile
 
-This layout uses Protobuf/Buf, generated HTTP handlers, Gin, Bun, Wire,
-Swagger, and SQLite. It demonstrates a small JWT-protected admin CRUD API. It
-does not include the dashboard, Ent, Telegram, WeChat, or deployment scripts.
+This layout uses Protobuf/Buf, generated HTTP handlers on stdx (net/http), Bun,
+Wire, Swagger, and SQLite. It demonstrates a small JWT-protected admin CRUD
+API. It does not include the dashboard, Ent, Telegram, WeChat, or deployment
+scripts.
 
 ## Ownership and Extension
 
@@ -18,8 +19,8 @@ Add contracts under `proto/<domain>/v1`, business logic under
 `internal/pkg/database`. Product logic must not be added to layout-owned CI,
 generation, app-bootstrap, or HTTP-adapter files.
 
-The canonical family rules and AI update algorithm live in
-`sphere-layout/docs/LAYOUT_CONTRACT.md`.
+See `docs/LAYOUT_CONTRACT.md` for the complete authoring and synchronization
+protocol, including legacy-project adoption and conflict handling.
 
 ## Workflow
 
