@@ -1,9 +1,12 @@
 package httpsrv
 
 import (
+	"errors"
 	"net/http"
+	"strings"
 	"time"
 
+	"buf.build/go/protovalidate"
 	"github.com/go-sphere/httpx"
 	"github.com/go-sphere/httpx/stdx"
 	"github.com/go-sphere/sphere/log"
@@ -11,6 +14,22 @@ import (
 	"github.com/go-sphere/sphere/server/middleware/cors"
 	"github.com/go-sphere/sphere/server/middleware/logger"
 )
+
+// init maps protovalidate failures to 400 so request validation errors from
+// the generated handlers match the 400 the generated swagger declares, instead
+// of falling through httpx.ParseError to a 500.
+func init() {
+	httpz.SetDefaultErrorParser(func(err error) (int32, int32, string) {
+		if ve, ok := errors.AsType[*protovalidate.ValidationError](err); ok {
+			msgs := make([]string, 0, len(ve.Violations))
+			for _, v := range ve.Violations {
+				msgs = append(msgs, v.Proto.GetMessage())
+			}
+			return 0, http.StatusBadRequest, strings.Join(msgs, ",")
+		}
+		return httpx.ParseError(err)
+	})
+}
 
 // UseCORS attaches CORS middleware when origins is non-empty. Like the access
 // log it is registered on the engine: a preflight for an unmatched path still
