@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	apiv1 "github.com/go-sphere/sphere-bun-layout/api/api/v1"
-	"github.com/go-sphere/sphere-bun-layout/api/entpb"
+	"github.com/go-sphere/sphere-bun-layout/api/bunpb"
 	"github.com/go-sphere/sphere-bun-layout/internal/pkg/conv"
 	"github.com/go-sphere/sphere/utils/secure"
 	"google.golang.org/protobuf/proto"
@@ -13,11 +13,11 @@ import (
 
 var _ apiv1.AdminServiceHTTPServer = (*Service)(nil)
 
-func stripPassword(admin *entpb.Admin) *entpb.Admin {
+func stripPassword(admin *bunpb.Admin) *bunpb.Admin {
 	if admin == nil {
 		return nil
 	}
-	out := proto.Clone(admin).(*entpb.Admin)
+	out := proto.Clone(admin).(*bunpb.Admin)
 	out.Password = ""
 	return out
 }
@@ -31,7 +31,7 @@ func (s *Service) CreateAdmin(ctx context.Context, request *apiv1.CreateAdminReq
 	if err != nil {
 		return nil, err
 	}
-	toInsert := proto.Clone(admin).(*entpb.Admin)
+	toInsert := proto.Clone(admin).(*bunpb.Admin)
 	toInsert.Id = 0
 	toInsert.Password = hashed
 	if _, err := s.db.NewInsert().
@@ -47,7 +47,7 @@ func (s *Service) CreateAdmin(ctx context.Context, request *apiv1.CreateAdminReq
 
 func (s *Service) DeleteAdmin(ctx context.Context, request *apiv1.DeleteAdminRequest) (*apiv1.DeleteAdminResponse, error) {
 	exec, err := s.db.NewDelete().
-		Model(&entpb.Admin{Id: request.Id}).
+		Model(&bunpb.Admin{Id: request.Id}).
 		WherePK().
 		Exec(ctx)
 	if err != nil {
@@ -64,7 +64,7 @@ func (s *Service) DeleteAdmin(ctx context.Context, request *apiv1.DeleteAdminReq
 }
 
 func (s *Service) GetAdmin(ctx context.Context, request *apiv1.GetAdminRequest) (*apiv1.GetAdminResponse, error) {
-	admin := entpb.Admin{Id: request.Id}
+	admin := bunpb.Admin{Id: request.Id}
 	if err := s.db.NewSelect().
 		Model(&admin).
 		WherePK().
@@ -77,7 +77,7 @@ func (s *Service) GetAdmin(ctx context.Context, request *apiv1.GetAdminRequest) 
 }
 
 func (s *Service) ListAdmins(ctx context.Context, request *apiv1.ListAdminsRequest) (*apiv1.ListAdminsResponse, error) {
-	var admins []entpb.Admin
+	var admins []bunpb.Admin
 	query := s.db.NewSelect().Model(&admins)
 
 	count, err := query.Count(ctx)

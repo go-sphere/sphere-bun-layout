@@ -48,7 +48,7 @@
       "internal/pkg/database/**",
       "internal/service/api/**",
       "proto/api/**",
-      "proto/entpb/entpb.proto"
+      "proto/bunpb/bunpb.proto"
     ],
     "generated": [
       "api/**",

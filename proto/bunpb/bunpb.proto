@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package entpb;
+package bunpb;
 
 import "sphere/binding/binding.proto";
 

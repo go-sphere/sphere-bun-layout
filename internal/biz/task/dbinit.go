@@ -3,7 +3,7 @@ package task
 import (
 	"context"
 
-	"github.com/go-sphere/sphere-bun-layout/api/entpb"
+	"github.com/go-sphere/sphere-bun-layout/api/bunpb"
 	"github.com/uptrace/bun"
 )
 
@@ -22,7 +22,7 @@ func (d DbInit) Identifier() string {
 }
 
 func (d DbInit) Start(ctx context.Context) error {
-	_, err := d.db.NewCreateTable().IfNotExists().Model(&entpb.Admin{}).Exec(ctx)
+	_, err := d.db.NewCreateTable().IfNotExists().Model(&bunpb.Admin{}).Exec(ctx)
 	if err != nil {
 		return err
 	}

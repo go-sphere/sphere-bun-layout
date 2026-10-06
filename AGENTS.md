@@ -13,7 +13,8 @@ Read `.sphere/layout.json` before modifying files. Never hand-edit generated
 paths. Treat mixed paths as three-way merge seams and assume every unclassified
 path is project-owned.
 
-Add contracts under `proto/<domain>/v1`, business logic under
+Add contracts under `proto/<domain>/v1` (Bun model messages belong in the
+handwritten `proto/bunpb/bunpb.proto`), business logic under
 `internal/biz/<domain>`, service implementations under
 `internal/service/<domain>`, and Bun persistence code under
 `internal/pkg/database`. Product logic must not be added to layout-owned CI,

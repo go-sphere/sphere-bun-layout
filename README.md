@@ -28,7 +28,8 @@ system.
 
 ## Structure and Ownership
 
-- `proto/**` contains handwritten API and Bun model contracts.
+- `proto/**` contains handwritten API and Bun model contracts; the Bun models
+  live in `proto/bunpb/bunpb.proto` (generated as `api/bunpb`).
 - `api/**` and `swagger/**` are generated.
 - `internal/service/**` contains handler implementations.
 - `internal/biz/**` contains initialization and business tasks.
@@ -85,3 +86,12 @@ exits if the zone cannot be loaded. Newer sphere releases no longer set it from
 a package `init()`, so a project that keeps an older `main.go` runs in the host
 timezone after upgrading sphere. Merge `cmd/app/main.go` (it is `mixed`), then
 pass another IANA zone or delete the call to keep the host default.
+
+The handwritten Bun model contract was renamed from `proto/entpb/entpb.proto`
+(package `entpb`) to `proto/bunpb/bunpb.proto` (package `bunpb`); the old name
+suggested Ent-generated output. This is a breaking template change: generated
+Go moves from `api/entpb` to `api/bunpb`. A project synchronizing this revision
+should move its model messages into `proto/bunpb`, change proto imports to
+`"bunpb/bunpb.proto"` and `entpb.X` references to `bunpb.X`, update Go imports
+of `.../api/entpb` to `.../api/bunpb`, delete the stale `api/entpb`, then run
+`make gen/all` and `make codegen-baseline`.
