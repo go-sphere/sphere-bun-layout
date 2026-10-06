@@ -46,9 +46,6 @@ func TestValidationErrorRendersBadRequest(t *testing.T) {
 	if body.Success {
 		t.Error("success = true, want false")
 	}
-	if body.Message == "" || body.Message == http.StatusText(http.StatusBadRequest) {
-		t.Errorf("message = %q, want violation details", body.Message)
-	}
 	if !strings.Contains(body.Message, "greater than or equal to 0") {
 		t.Errorf("message = %q, want the page violation", body.Message)
 	}
