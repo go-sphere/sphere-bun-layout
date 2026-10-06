@@ -9,7 +9,7 @@ import (
 )
 
 type Config struct {
-	Location string
+	Location string `json:"location" yaml:"location"`
 }
 
 func NewDbConnection(conf Config) (*sql.DB, error) {

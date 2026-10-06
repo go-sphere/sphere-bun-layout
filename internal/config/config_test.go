@@ -36,6 +36,16 @@ func TestNewConfigAppliesLogLevelDefault(t *testing.T) {
 	}
 }
 
+func TestNewConfigReadsDatabaseLocation(t *testing.T) {
+	config, err := NewConfig(writeConfig(t, `{"api":{"jwt":"api-secret"},"database":{"location":"./var/test.sqlite3"}}`))
+	if err != nil {
+		t.Fatalf("NewConfig() error = %v", err)
+	}
+	if got, want := config.Database.Location, "./var/test.sqlite3"; got != want {
+		t.Errorf("Database.Location = %q, want %q", got, want)
+	}
+}
+
 func writeConfig(t *testing.T, content string) string {
 	t.Helper()
 	path := filepath.Join(t.TempDir(), "config.json")
