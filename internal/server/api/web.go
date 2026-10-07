@@ -11,6 +11,11 @@ import (
 	"github.com/go-sphere/sphere/server/middleware/auth"
 )
 
+// Web is the demo API server. It only checks that a request carries a JWT
+// signed with Config.JWT: there is no login endpoint, no token issuance and no
+// role check, so any token holder can create and delete admins. Before real
+// use, add an endpoint that issues tokens and protect AdminService with a
+// permission middleware (see sphere-layout's dash server for both).
 type Web struct {
 	config  Config
 	server  httpx.Engine
