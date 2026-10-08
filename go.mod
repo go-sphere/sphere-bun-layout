@@ -7,10 +7,10 @@ require (
 	buf.build/go/protovalidate v1.4.0
 	github.com/go-sphere/binding v0.0.5
 	github.com/go-sphere/confstore v0.0.5
-	github.com/go-sphere/errors v0.0.2
-	github.com/go-sphere/httpx v0.0.5
-	github.com/go-sphere/httpx/stdx v0.0.5
-	github.com/go-sphere/sphere v0.0.6
+	github.com/go-sphere/errors v0.0.3
+	github.com/go-sphere/httpx v0.0.6
+	github.com/go-sphere/httpx/stdx v0.0.6
+	github.com/go-sphere/sphere v0.0.7
 	github.com/go-viper/mapstructure/v2 v2.5.0
 	github.com/google/wire v0.7.0
 	github.com/spf13/cobra v1.10.2
