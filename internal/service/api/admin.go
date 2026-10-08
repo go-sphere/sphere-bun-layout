@@ -2,6 +2,8 @@ package api
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 
 	apiv1 "github.com/go-sphere/sphere-bun-layout/api/api/v1"
@@ -69,6 +71,9 @@ func (s *Service) GetAdmin(ctx context.Context, request *apiv1.GetAdminRequest) 
 		Model(&admin).
 		WherePK().
 		Scan(ctx); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, apiv1.AdminError_ADMIN_ERROR_NOT_FOUND
+		}
 		return nil, err
 	}
 	return &apiv1.GetAdminResponse{
