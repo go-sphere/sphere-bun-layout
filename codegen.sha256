@@ -1,3 +1,4 @@
+# module github.com/go-sphere/sphere-bun-layout
 c88b80b21c699e7ba023bd265435df1adfff4902c0fc1b3c01c53e66e64e69d9  api/api/v1/admin.errors.pb.go
 5770f133b50f858ba4cd9028a061aeff358c216f77e04acb690936bf02f9bf0d  api/api/v1/admin.pb.go
 99af1f205efc35164b81eb165e6bf22295cf3329253aeca61a8735fbe11c01f1  api/api/v1/admin.sphere.pb.go
