@@ -23,7 +23,7 @@ func (adminService) ListAdmins(context.Context, *apiv1.ListAdminsRequest) (*apiv
 }
 
 func TestValidationErrorRendersBadRequest(t *testing.T) {
-	engine := httpsrv.NewServer("test", "127.0.0.1:0")
+	engine := httpsrv.NewServer("test", "127.0.0.1:0", httpsrv.Options{})
 	apiv1.RegisterAdminServiceHTTPServer(engine.Group("/"), adminService{})
 	requester, ok := httpx.AsTestRequester(engine)
 	if !ok {
@@ -48,5 +48,25 @@ func TestValidationErrorRendersBadRequest(t *testing.T) {
 	}
 	if !strings.Contains(body.Message, "greater than or equal to 0") {
 		t.Errorf("message = %q, want the page violation", body.Message)
+	}
+}
+
+func TestBodyCapErrorRendersRequestEntityTooLarge(t *testing.T) {
+	engine := httpsrv.NewServer("test", "127.0.0.1:0", httpsrv.Options{})
+	// A binder wraps the read error as a 400; the cap must still win.
+	engine.Group("/").POST("/upload", httpz.WithJson(func(httpx.Context) (string, error) {
+		return "", httpx.WrapBindError(&http.MaxBytesError{Limit: 64})
+	}))
+	requester, ok := httpx.AsTestRequester(engine)
+	if !ok {
+		t.Fatal("engine does not support in-process requests")
+	}
+	response, err := requester.Do(httptest.NewRequest(http.MethodPost, "/upload", nil))
+	if err != nil {
+		t.Fatalf("request: %v", err)
+	}
+	defer func() { _ = response.Body.Close() }()
+	if response.StatusCode != http.StatusRequestEntityTooLarge {
+		t.Fatalf("status = %d, want %d", response.StatusCode, http.StatusRequestEntityTooLarge)
 	}
 }

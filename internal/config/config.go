@@ -16,16 +16,14 @@ import (
 var BuildVersion = "dev"
 
 type Config struct {
-	Environments map[string]string `json:"environments" yaml:"environments"`
-	Log          zapx.Config       `json:"log" yaml:"log"`
-	API          api.Config        `json:"api" yaml:"api"`
-	Docs         docs.Config       `json:"docs" yaml:"docs"`
-	Database     database.Config   `json:"database" yaml:"database"`
+	Log      zapx.Config     `json:"log" yaml:"log"`
+	API      api.Config      `json:"api" yaml:"api"`
+	Docs     docs.Config     `json:"docs" yaml:"docs"`
+	Database database.Config `json:"database" yaml:"database"`
 }
 
 func NewEmptyConfig() *Config {
 	return &Config{
-		Environments: map[string]string{},
 		Log: zapx.Config{
 			File: zapx.FileConfig{
 				FileName:   "./var/log/sphere.log",
@@ -64,6 +62,9 @@ func NewConfig(path string) (*Config, error) {
 	}
 	if config.API.JWT == "" {
 		return nil, fmt.Errorf("api jwt must be non-empty")
+	}
+	if err := config.API.HTTP.Validate(); err != nil {
+		return nil, fmt.Errorf("api http: %w", err)
 	}
 	return config, nil
 }
