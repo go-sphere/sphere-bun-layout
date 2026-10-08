@@ -3,6 +3,7 @@ package httpsrv_test
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -12,6 +13,7 @@ import (
 	apiv1 "github.com/go-sphere/sphere-bun-layout/api/api/v1"
 	"github.com/go-sphere/sphere-bun-layout/internal/pkg/httpsrv"
 	"github.com/go-sphere/sphere/server/httpz"
+	"github.com/go-sphere/sphere/storage/storageerr"
 )
 
 type adminService struct {
@@ -68,5 +70,48 @@ func TestBodyCapErrorRendersRequestEntityTooLarge(t *testing.T) {
 	defer func() { _ = response.Body.Close() }()
 	if response.StatusCode != http.StatusRequestEntityTooLarge {
 		t.Fatalf("status = %d, want %d", response.StatusCode, http.StatusRequestEntityTooLarge)
+	}
+}
+
+// A storage sentinel carries no status of its own, so the process-wide parser
+// must classify it; falling back to httpx.ParseError answered 500.
+func TestStorageErrorsRenderTheirStatus(t *testing.T) {
+	engine := httpsrv.NewServer("test", "127.0.0.1:0", httpsrv.Options{})
+	fail := func(err error) httpx.Handler {
+		return httpz.WithJson(func(httpx.Context) (string, error) { return "", err })
+	}
+	group := engine.Group("/storage")
+	group.GET("/missing", fail(storageerr.ErrNotFound))
+	group.GET("/exists", fail(fmt.Errorf("move upload: %w", storageerr.ErrDestExists)))
+	requester, ok := httpx.AsTestRequester(engine)
+	if !ok {
+		t.Fatal("engine does not support in-process requests")
+	}
+
+	for _, tt := range []struct {
+		path        string
+		wantStatus  int
+		wantMessage string
+	}{
+		{path: "/storage/missing", wantStatus: http.StatusNotFound, wantMessage: http.StatusText(http.StatusNotFound)},
+		{path: "/storage/exists", wantStatus: http.StatusBadRequest, wantMessage: http.StatusText(http.StatusBadRequest)},
+	} {
+		t.Run(tt.path, func(t *testing.T) {
+			response, err := requester.Do(httptest.NewRequest(http.MethodGet, tt.path, nil))
+			if err != nil {
+				t.Fatalf("request: %v", err)
+			}
+			defer func() { _ = response.Body.Close() }()
+			if response.StatusCode != tt.wantStatus {
+				t.Fatalf("status = %d, want %d", response.StatusCode, tt.wantStatus)
+			}
+			var body httpz.ErrorResponse
+			if err := json.NewDecoder(response.Body).Decode(&body); err != nil {
+				t.Fatalf("decode body: %v", err)
+			}
+			if body.Message != tt.wantMessage {
+				t.Errorf("message = %q, want %q", body.Message, tt.wantMessage)
+			}
+		})
 	}
 }
