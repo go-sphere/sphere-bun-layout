@@ -25,7 +25,7 @@ func main() {
 		return boot.NewApplication(docs.NewWebServer(c.Docs)), nil
 	}, boot.WithShutdownTimeout(5*time.Second))
 	if err != nil {
-		fmt.Printf("Boot error: %v", err)
+		fmt.Fprintf(os.Stderr, "Boot error: %v\n", err)
 		os.Exit(1)
 	}
 	fmt.Println("Boot done")

@@ -3,14 +3,16 @@
 `sphere-bun-layout` is the Sphere project template for applications that use
 Bun instead of Ent. It keeps the same Proto-first HTTP, Wire, Swagger, Docker,
 and Makefile contracts as the other official layouts while limiting the example
-domain to a small authenticated admin API.
+domain to a minimal JWT-verified admin CRUD demo.
 
 ## Capabilities
 
 - Protobuf and Buf API contracts with generated HTTP handlers on the stdx
   (net/http) engine.
 - Bun models and SQLite through `sqliteshim`.
-- JWT-protected admin CRUD example.
+- JWT-verified admin CRUD demo (checks signed JWTs only: no login endpoint,
+  token issuance, or role checks—add those or see `sphere-layout` before
+  production use).
 - Wire dependency injection and Swagger/OpenAPI generation.
 - Docker and multi-architecture build targets.
 

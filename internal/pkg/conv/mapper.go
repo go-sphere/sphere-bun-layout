@@ -40,11 +40,3 @@ func Group[S any, K comparable](source []S, keyFunc func(S) K) map[K]S {
 	}
 	return result
 }
-
-func PointerArray[T any](source []T) []*T {
-	res := make([]*T, len(source))
-	for i, s := range source {
-		res[i] = &s
-	}
-	return res
-}

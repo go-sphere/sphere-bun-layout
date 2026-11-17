@@ -3,9 +3,11 @@
 ## Layout Profile
 
 This layout uses Protobuf/Buf, generated HTTP handlers on stdx (net/http), Bun,
-Wire, Swagger, and SQLite. It demonstrates a small JWT-protected admin CRUD
-API. It does not include the dashboard, Ent, Telegram, WeChat, or deployment
-scripts.
+Wire, Swagger, and SQLite. It demonstrates a minimal JWT-verified admin CRUD
+API: it only validates signed JWTs and has no login endpoint, token issuance,
+or role checks—add those (or see `sphere-layout`'s dash server) before
+production use. It does not include the dashboard, Ent, Telegram, WeChat, or
+deployment scripts.
 
 ## Ownership and Extension
 
@@ -17,8 +19,10 @@ Add contracts under `proto/<domain>/v1` (Bun model messages belong in the
 handwritten `proto/bunpb/bunpb.proto`), business logic under
 `internal/biz/<domain>`, service implementations under
 `internal/service/<domain>`, and Bun persistence code under
-`internal/pkg/database`. Product logic must not be added to layout-owned CI,
-generation, app-bootstrap, or HTTP-adapter files.
+`internal/pkg/database`. Single-row Bun `Scan` returns `sql.ErrNoRows` when
+missing; map domain errors explicitly in the service layer (see
+`internal/service/api/admin.go`). Product logic must not be added to layout-owned
+CI, generation, app-bootstrap, or HTTP-adapter files.
 
 See `docs/LAYOUT_CONTRACT.md` for the complete authoring and synchronization
 protocol, including legacy-project adoption and conflict handling.

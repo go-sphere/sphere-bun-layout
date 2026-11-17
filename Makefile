@@ -26,10 +26,9 @@ DOCKER_FILE     ?= cmd/app/Dockerfile
 # ---------- Go Build Config ----------
 LD_FLAGS        ?= -X $(MODULE)/internal/config.BuildVersion=$(BUILD_VER)
 GO              ?= go
-GO_TAGS         ?= jsoniter#,embed_dash
-GO_RUN          ?= CGO_ENABLED=0 $(GO) run -ldflags "$(LD_FLAGS)" -tags=$(GO_TAGS)
-GO_RUN_RACE     ?= CGO_ENABLED=1 $(GO) run -race -ldflags "$(LD_FLAGS)" -tags=$(GO_TAGS)
-GO_BUILD        ?= CGO_ENABLED=0 $(GO) build -trimpath -ldflags "$(LD_FLAGS)" -tags=$(GO_TAGS)
+GO_RUN          ?= CGO_ENABLED=0 $(GO) run -ldflags "$(LD_FLAGS)"
+GO_RUN_RACE     ?= CGO_ENABLED=1 $(GO) run -race -ldflags "$(LD_FLAGS)"
+GO_BUILD        ?= CGO_ENABLED=0 $(GO) build -trimpath -ldflags "$(LD_FLAGS)"
 GO_INSTALL      ?= $(GO) install
 
 # ---------- Tool Versions ----------
@@ -69,7 +68,6 @@ clean: ## Clean gen code and build files
 	rm -rf ./api/*
 	rm -rf ./build/*
 	rm -rf ./swagger/*
-	rm -rf ./internal/pkg/database/ent/*
 
 gen/wire: ## Generate wire code
 	cd cmd/app/ && $(WIRE_CLI) gen
@@ -185,7 +183,6 @@ init: ## Init all dependencies
 	$(GO) mod download
 	$(MAKE) install
 	$(MAKE) gen/all
-	$(GO) mod tidy
 	$(MAKE) gen/conf
 	$(MAKE) codegen-baseline
 

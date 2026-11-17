@@ -12,7 +12,6 @@ lint:
     - STANDARD
   ignore:
     - proto/bunpb
-    - proto/dash/v1/auth.proto
   rpc_allow_same_request_response: true
 breaking:
   use:
