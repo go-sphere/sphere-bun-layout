@@ -101,7 +101,14 @@ func TestOversizedBodyIsRejectedWith413(t *testing.T) {
 	}
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("Authorization", "Bearer "+token)
-	response, err := (&http.Client{Timeout: 3 * time.Second}).Do(request)
+	// The server answers 413 from the declared Content-Length without reading
+	// the body, then closes the connection. Waiting for that answer
+	// (Expect: 100-continue) keeps the client from streaming a body the server
+	// will not read, which would race the close and fail as a connection reset.
+	request.Header.Set("Expect", "100-continue")
+	transport := &http.Transport{ExpectContinueTimeout: time.Second}
+	defer transport.CloseIdleConnections()
+	response, err := (&http.Client{Timeout: 3 * time.Second, Transport: transport}).Do(request)
 	if err != nil {
 		t.Fatalf("POST /api/admin/create: %v", err)
 	}
